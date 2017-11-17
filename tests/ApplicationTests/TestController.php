@@ -5,7 +5,6 @@ namespace Tests\ApplicationTests;
 
 
 use Core\Controller\BaseController;
-use Core\Http\Request;
 use Core\Router;
 
 class TestController extends BaseController

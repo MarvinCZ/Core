@@ -3,10 +3,12 @@
 namespace Core\Controller;
 
 use Core\Exceptions\AlreadyRendered;
+use Core\Http\Request;
 
 class BaseController
 {
 	private $rendered = false;
+	private $request;
 
 	protected function render(string $output)
 	{
@@ -37,5 +39,10 @@ class BaseController
 	public function isRendered(): bool
 	{
 		return $this->rendered;
+	}
+
+	public function injectRequest(Request $request)
+	{
+		$this->request = $request;
 	}
 }

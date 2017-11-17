@@ -55,5 +55,6 @@ class Application
 
 	private function handleException($e)
 	{
+		throw $e;
 	}
 }

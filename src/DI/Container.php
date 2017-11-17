@@ -83,7 +83,26 @@ class Container
 
 	public function buildByType($type)
 	{
-		return $this->buildService($type);
+		$service = $this->buildService($type);
+		$reflection = new \ReflectionClass($type);
+		$methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+		foreach ($methods as $method) {
+			$methodName = $method->name;
+			if (preg_match('/^inject/', $methodName)) {
+				$parameters = $method->getParameters();
+				if (count($parameters) != 1) {
+					throw new \Exception();
+				}
+				$par = $parameters[0]->getClass();
+				if (!$par) {
+					throw new ServiceParameterWithoutTypeHint($methodName);
+				}
+				$par = $par->name;
+				$value = $this->getByType($par);
+				$service->$methodName($value);
+			}
+		}
+		return $service;
 	}
 
 	public function runMethod($instance, $method, $params)
