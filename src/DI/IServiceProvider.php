@@ -4,5 +4,5 @@ namespace Core\DI;
 
 interface IServiceProvider
 {
-	public function getServices();
+    public function getServices();
 }

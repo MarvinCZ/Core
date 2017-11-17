@@ -11,8 +11,8 @@ namespace Core\Exceptions;
 
 class AlreadyRendered extends \Exception
 {
-	public function __construct()
-	{
-		parent::__construct("Already rendered");
-	}
+    public function __construct()
+    {
+        parent::__construct("Already rendered");
+    }
 }

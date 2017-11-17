@@ -2,8 +2,9 @@
 
 namespace Tests\ContainerTests;
 
-
 class C
 {
-	public function __construct(B $class) {}
+    public function __construct(B $class)
+    {
+    }
 }
