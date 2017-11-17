@@ -2,6 +2,7 @@
 
 namespace Core\DI;
 
+use Core\Controller\BaseController;
 use Core\Exceptions\CircularDependencyFound;
 use Core\Exceptions\ServiceNotRegistered;
 use Core\Exceptions\UndefinedServiceException;
@@ -78,5 +79,31 @@ class Container
 
 		unset($this->building[$type]);
 		return $classReflection->newInstanceArgs($parameters);
+	}
+
+	public function buildByType($type)
+	{
+		return $this->buildService($type);
+	}
+
+	public function runMethod($instance, $method, $params)
+	{
+		$reflection = new \ReflectionClass(get_class($instance));
+		$reflectionMethod = $reflection->getMethod($method);
+		$requiredParameters = $reflectionMethod->getParameters();
+		$parameters = [];
+		foreach ($requiredParameters as $parameter) {
+			if(isset($params[$parameter->name])) {
+				$parameters []= $params[$parameter->name];
+			} else {
+				$parameterType = $parameter->getClass();
+				if (!$parameterType) {
+					throw new ServiceParameterWithoutTypeHint($instance);
+				}
+				$parameterType = $parameterType->name;
+				$parameters []= $this->getByType($parameterType);
+			}
+		}
+		$instance->$method(...$parameters);
 	}
 }
