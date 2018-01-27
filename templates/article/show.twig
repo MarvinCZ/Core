@@ -1,0 +1,35 @@
+{% extends "layout/app.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-auto">
+            <h1>{{ article.name }}</h1>
+        </div>
+        {% if canEdit %}
+            <div class="col-md-auto ml-md-auto">
+                <div class="btn-group">
+                    <a href="/article-update/{{ article.id }}" class="btn btn-sm btn-outline-primary">
+                        <i class="fa fa-pencil"></i> Upravit
+                    </a>
+                    <a href="/article/{{ article.id }}" data-method="delete" class="btn btn-sm btn-outline-danger">
+                        <i class="fa fa-trash"></i> Smazat
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <p><b>Autoři: </b>{{ article.authors }}</p>
+    <h2>Abstrakt</h2>
+    <div class="article-abstract">
+        {{ article.abstract|raw }}
+    </div>
+    <div class="btn-group">
+        <a href="/storage/{{ article.filePath }}" class="btn btn-outline-primary btn-lg">
+            <i class="fa fa-eye"></i>Zobrazit
+        </a>
+        <a href="/storage/{{ article.filePath }}" download="download" class="btn btn-outline-primary btn-lg">
+            <i class="fa fa-download"></i>Stáhnout
+        </a>
+    </div>
+{% endblock %}

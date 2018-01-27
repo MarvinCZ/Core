@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Controller\BaseController;
 use Core\DI\Container;
 use Core\Exceptions\RouteNotFound;
 
@@ -28,7 +29,6 @@ class Application
             }
 
             $this->dispatchRoute($route);
-
         } catch (\Exception $e) {
             $this->handleException($e);
         }
@@ -39,7 +39,10 @@ class Application
         $controller = $route->getController();
         $action = $route->getAction();
 
+        /** @var BaseController $controller */
         $controller = $this->container->buildByType($controller);
+        $controller->setApplication($this);
+        $controller->init();
         $params = $route->getParams();
 
         $this->container->runMethod($controller, $action, $params);
@@ -55,6 +58,15 @@ class Application
 
     private function handleException($e)
     {
+    	if ($e instanceof RouteNotFound) {
+    		$this->redirect('');
+	    }
         throw $e;
     }
+
+	public function redirect($string)
+	{
+		header('Location: http://' . $_SERVER['HTTP_HOST'] . $string);
+		die();
+	}
 }

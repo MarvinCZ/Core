@@ -20,14 +20,14 @@ class Request
             return RestMethods::GET;
         }
 
-        if (isset($_POST['method']) && $_POST['method'] == RestMethods::DELETE) {
+        if (isset($_POST['method']) && strtoupper($_POST['method']) == RestMethods::DELETE) {
             return RestMethods::DELETE;
         }
 
         return RestMethods::POST;
     }
 
-    public function getParameter($key)
+    public function getParameter($key, $throwException = FALSE): ?string
     {
         if (isset($_GET[$key]) && $this->getMethod() == RestMethods::GET) {
             return $_GET[$key];
@@ -41,7 +41,11 @@ class Request
             return $_GET[$key];
         }
 
-        throw new UndefinedParameter($key);
+        if ($throwException) {
+	        throw new UndefinedParameter($key);
+        }
+
+        return NULL;
     }
 
     public function validate()

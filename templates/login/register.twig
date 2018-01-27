@@ -1,0 +1,48 @@
+{% extends "layout/app.twig" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block content %}
+    <h1>Register</h1>
+    <div class="row">
+        <form method="post" class="form-horizontal col-md-6 offset-md-3">
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="username">Uživatelské jmeno</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="username" id="username">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="email">Email</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="email" id="email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="firstname">Jméno</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="firstname" id="firstname">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="surname">Příjmení</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="surname" id="surname">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="password">Heslo</label>
+                <div class="col-md-8">
+                    <input type="password" class="form-control" name="password" id="password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="ml-auto col-md-8">
+                    <input type="submit" class="form-control btn btn-primary" name="submit" value="Přihlásit se">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

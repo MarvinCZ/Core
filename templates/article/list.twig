@@ -1,0 +1,26 @@
+{% extends "layout/app.twig" %}
+
+{% block content %}
+    <table class="table">
+        <tr>
+            <th>Autoři</th>
+            <th>Název</th>
+            <th>Publikováno</th>
+            <th>Akce</th>
+        </tr>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.authors }}</td>
+                <td>{{ article.name }}</td>
+                <td>{{ article.published ? 'Ano' : 'Ne' }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="/article/{{ article.id }}" data-method="delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                        <a href="/article-update/{{ article.id }}" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></a>
+                        <a href="/article/{{ article.id }}" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

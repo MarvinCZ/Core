@@ -4,7 +4,7 @@ namespace Core;
 
 class View
 {
-	private $basePath = "";
+	private $basePath = APP_DIR . '/templates/';
 	private $twig;
 
 	/**
