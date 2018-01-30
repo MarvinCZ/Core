@@ -1,0 +1,39 @@
+{% extends "layout/app.twig" %}
+
+{% block content %}
+    <h1>Uživatelé</h1>
+    <table class="table">
+        <tr>
+            <th>Jméno</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Akce</th>
+        </tr>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.name }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="/admin/user/{{ u.id }}/{{ u.author ? 'remove' : 'add' }}/author" class="btn btn-sm btn-{{ u.author ? 'success' : 'danger' }}">Autor</a>
+                        <a href="/admin/user/{{ u.id }}/{{ u.reviewer ? 'remove' : 'add' }}/reviewer" class="btn btn-sm btn-{{ u.reviewer ? 'success' : 'danger' }}">Recenzent</a>
+                        {% if u.id == user.id %}
+                            <div class="btn btn-sm btn-success disabled">Admin</div>
+                        {% else %}
+                            <a href="/admin/user/{{ u.id }}/{{ u.admin ? 'remove' : 'add' }}/admin" class="btn btn-sm btn-{{ u.admin ? 'success' : 'danger' }}">Admin</a>
+                        {% endif %}
+                    </div>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a href="/article/{{ user.id }}" data-method="delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                        <a href="/article-update/{{ user.id }}" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></a>
+                        <a href="/article/{{ user.id }}" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

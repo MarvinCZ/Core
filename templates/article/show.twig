@@ -1,12 +1,58 @@
 {% extends "layout/app.twig" %}
 
 {% block content %}
+    {% if not article.published and user.admin %}
+        <div class="modal fade" id="review-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Vyžádat si recenzi</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="/article/{{ article.id }}/add-reviewers" class="ajax">
+                        <div class="modal-body">
+                            {% for reviewer in reviewers %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="reviewers[]" value="{{ reviewer.id }}" id="reviewer-{{ reviewer.id }}">
+                                    <label class="form-check-label" for="reviewer-{{ reviewer.id }}">
+                                        {{ reviewer.name }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary" value="Vyžádat"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-auto">
             <h1>{{ article.name }}</h1>
         </div>
         {% if canEdit %}
             <div class="col-md-auto ml-md-auto">
+                {% if user.admin %}
+                    <div class="btn-group">
+                        {% if canPublish %}
+                            <a href="/admin/publish-article/{{ article.id }}" class="btn btn-outline-primary btn-sm"><i class="fa fa-check"></i> Publikovat</a>
+                        {% endif %}
+                        {% if not article.published %}
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#review-modal">
+                                <i class="fa fa-plus"></i> Recenze
+                            </button>
+                        {% endif %}
+                        {% if not article.rejected %}
+                            <a href="/admin/reject-article/{{ article.id }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-ban"></i> Odmítnout</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-auto">
                 <div class="btn-group">
                     <a href="/article-update/{{ article.id }}" class="btn btn-sm btn-outline-primary">
                         <i class="fa fa-pencil"></i> Upravit
@@ -20,6 +66,9 @@
     </div>
 
     <p><b>Autoři: </b>{{ article.authors }}</p>
+    {% if expandedInfo %}
+        <p><b>Stav: </b>{{ article.published ? 'Publikováno' : article.rejected ? 'Odmítnuto' : "Čeká" }}</p>
+    {% endif %}
     <h2>Abstrakt</h2>
     <div class="article-abstract">
         {{ article.abstract|raw }}
@@ -32,4 +81,30 @@
             <i class="fa fa-download"></i>Stáhnout
         </a>
     </div>
+
+    {% if reviews %}
+        <table class="table mt-3">
+            <tr>
+                <th>Uživatel</th>
+                <th>Hodnocení</th>
+                <th>Stav</th>
+                <th>Akce</th>
+            </tr>
+            {% for review in reviews %}
+                <tr>
+                    <td>{{ review.user.name }}</td>
+                    <td>{{ review.rating }}</td>
+                    <td>{{ review.done ? 'Hotovo' : 'Čeká na vyřízení' }}</td>
+                    <td>
+                        {% if user.admin or user.id == article.userId or user.id == review.userId %}
+                            <div class="btn-group">
+                                <a href="/review/{{ review.id }}" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                            </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
 {% endblock %}

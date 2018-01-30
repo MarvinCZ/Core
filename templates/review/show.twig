@@ -1,0 +1,62 @@
+{% extends "layout/app.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-auto">
+            <h1>Hodnocení článku - {{ review.article.name }}</h1>
+        </div>
+        <div class="col-md-auto ml-md-auto">
+            <div class="btn-group">
+                {% if user.id == review.userId and not review.article.published %}
+                <a href="/review/edit/{{ review.id }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Editovat hodnocení</a>
+                {% endif %}
+                <a href="/article/{{ review.article.id }}" class="btn btn-primary"><i class="fa fa-eye"></i> Zobrazit článek</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <table class="table">
+                <tr>
+                    <th>Uživatel</th>
+                    <td>{{ review.user.name }}</td>
+                </tr>
+                <tr>
+                    <th>Jazyk</th>
+                    <td>{{ review.language }}</td>
+                </tr>
+                <tr>
+                    <th>Technická kvalita</th>
+                    <td>{{ review.technicalQuality }}</td>
+                </tr>
+                <tr>
+                    <th>Utility</th>
+                    <td>{{ review.utility }}</td>
+                </tr>
+                <tr>
+                    <th>Šíře publika</th>
+                    <td>{{ review.audienceDiversity }}</td>
+                </tr>
+                <tr>
+                    <th>Originalita</th>
+                    <td>{{ review.originality }}</td>
+                </tr>
+                <tr>
+                    <th>Doporučení</th>
+                    <td>
+                    {% if review.suggestion == 1 %}Velmi doporučuji{% endif %}
+                    {% if review.suggestion == 2 %}Doporučuji{% endif %}
+                    {% if review.suggestion == 3 %}Nevím{% endif %}
+                    {% if review.suggestion == 4 %}Nedoporučuji{% endif %}
+                    {% if review.suggestion == 5 %}Velmi nedoporučuji{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Hodnocení</th>
+                    <td>{{ review.text }}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+{% endblock %}

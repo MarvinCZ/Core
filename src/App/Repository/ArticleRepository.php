@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Article;
+use App\Model\Review;
 use Core\Database\PdoWrapper;
 
 class ArticleRepository
@@ -41,12 +42,7 @@ class ArticleRepository
 	public function getWhere($query, $params = [])
 	{
 		$result = $this->pdoWrapper->getAll("SELECT * FROM article WHERE " . $query, $params);
-		$out = [];
-		foreach ($result as $row) {
-			$out []= $this->transformRow($row);
-		}
-
-		return $out;
+		return $this->transformRows($result);
 	}
 
 	public function remove($id)
@@ -57,7 +53,7 @@ class ArticleRepository
 	private function insert(Article $article)
 	{
 		$this->pdoWrapper->execute(
-			"INSERT INTO article(name, authors, abstract, file, user_id, published) VALUES (?,?,?,?,?,?)",
+			"INSERT INTO article(name, authors, abstract, file, user_id, published, rejected) VALUES (?,?,?,?,?,?,?)",
 			[
 				$article->getName(),
 				$article->getAuthors(),
@@ -65,6 +61,7 @@ class ArticleRepository
 				$article->getFilePath(),
 				$article->getUserId(),
 				$article->isPublished(),
+				$article->isRejected(),
 			]
 		);
 	}
@@ -72,7 +69,7 @@ class ArticleRepository
 	private function update(Article $article)
 	{
 		$this->pdoWrapper->execute(
-			"UPDATE article SET name=?, authors=?, abstract=?, file=?, user_id=?, published=? WHERE id = ?",
+			"UPDATE article SET name=?, authors=?, abstract=?, file=?, user_id=?, published=?, rejected=? WHERE id = ?",
 			[
 				$article->getName(),
 				$article->getAuthors(),
@@ -80,9 +77,20 @@ class ArticleRepository
 				$article->getFilePath(),
 				$article->getUserId(),
 				$article->isPublished(),
+				$article->isRejected(),
 				$article->getId(),
 			]
 		);
+	}
+
+	/** @return Article[] */
+	private function transformRows($rows)
+	{
+		$out = [];
+		foreach ($rows as $row) {
+			$out []= $this->transformRow($row);
+		}
+		return $out;
 	}
 
 	private function transformRow($row): Article
@@ -95,7 +103,34 @@ class ArticleRepository
 		$article->setFilePath($row['file']);
 		$article->setUserId($row['user_id']);
 		$article->setPublished((bool) $row['published']);
+		$article->setRejected((bool) $row['rejected']);
 
 		return $article;
+	}
+
+	/**
+	 * @param Review[] $reviews
+	 */
+	public function eagerLoad($reviews)
+	{
+		if (!$reviews) {
+			return;
+		}
+		$idList = [];
+		foreach ($reviews as $review) {
+			$idList []= $review->getArticleId();
+		}
+
+		$in  = str_repeat('?,', count($idList) - 1) . '?';
+		$articleRows = $this->pdoWrapper->getAll("SELECT * FROM article WHERE id IN ($in)", $idList);
+		$articles = $this->transformRows($articleRows);
+		$articleIdHash = [];
+		foreach ($articles as $article) {
+			$articleIdHash[$article->getId()] = $article;
+		}
+
+		foreach ($reviews as $review) {
+			$review->setArticle($articleIdHash[$review->getArticleId()]);
+		}
 	}
 }

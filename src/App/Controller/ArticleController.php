@@ -7,22 +7,28 @@ namespace App\Controller;
 use App\Model\Article;
 use App\Model\User;
 use App\Repository\ArticleRepository;
+use App\Repository\ReviewRepository;
+use App\Repository\UserRepository;
 use Core\Controller\BaseController;
 use Core\Http\Request;
+use Core\Model\IUser;
 
 class ArticleController extends BaseController
 {
 	/** @var ArticleRepository */
 	private $articleRepository;
 
-	function __construct(ArticleRepository $articleRepository)
+	/** @var UserRepository */
+	private $userRepository;
+
+	/** @var ReviewRepository */
+	private $reviewRepository;
+
+	function __construct(ArticleRepository $articleRepository, UserRepository $userRepository, ReviewRepository $reviewRepository)
 	{
 		$this->articleRepository = $articleRepository;
-	}
-
-	public function index()
-	{
-
+		$this->userRepository = $userRepository;
+		$this->reviewRepository = $reviewRepository;
 	}
 
 	public function myArticles()
@@ -84,20 +90,42 @@ class ArticleController extends BaseController
 			$this->redirect('/');
 		}
 
-		$owner = $article->getUserId() == $this->getUser()->getId();
-		$canViewOthers = $this->getUser()->hasRole(User::ROLE_REVIEWER) || $this->getUser()->hasRole(User::ROLE_ADMIN);
+		$owner = $this->isLoggedIn() && $article->getUserId() == $this->getUser()->getId();
+		$canViewOthers = $this->isLoggedIn() && ($this->getUser()->hasRole(User::ROLE_REVIEWER) || $this->getUser()->hasRole(User::ROLE_ADMIN));
 
 		if (!($article->isPublished() || $canViewOthers || $owner)) {
 			$this->addFlashMessage('danger', 'Článek neexistuje');
 			$this->redirect('/');
 		}
 
-		$canEdit = $owner || $this->getUser()->hasRole(User::ROLE_ADMIN);
+		$canEdit = $owner || ($this->isLoggedIn() && $this->getUser()->hasRole(User::ROLE_ADMIN));
+		$reviewers = [];
+		if ($this->isLoggedIn() && $this->getUser()->hasRole(User::ROLE_ADMIN)) {
+			$reviewers = $this->rejectReviewer($this->userRepository->getUsersWithRole(User::ROLE_REVIEWER), $article->getUserId());
+		}
+
+		$reviews = [];
+		if ($owner || $canViewOthers) {
+			$reviews = $this->reviewRepository->getReviewsForArticle($article->getId());
+			$this->userRepository->eagerLoad($reviews);
+		}
+
+		$canPublish = !$article->isPublished() && $this->getUser()->hasRole(User::ROLE_ADMIN) && $this->reviewRepository->getReviewCountForArticle($id) >= 3;
 
 		$this->renderView('article/show.twig', [
 			'article' => $article,
 			'canEdit' => $canEdit,
+			'reviewers' => $reviewers,
+			'reviews' => $reviews,
+			'canPublish' => $canPublish,
+			'expandedInfo' => $owner || $canViewOthers
 		]);
+	}
+
+	private function rejectReviewer($reviewers, $rejectId) {
+		return array_filter($reviewers, function(IUser $user) use ($rejectId) {
+			return $user->getId() != $rejectId;
+		});
 	}
 
 	public function save(Request $request)

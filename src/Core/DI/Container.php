@@ -116,7 +116,7 @@ class Container
             } else {
                 $parameterType = $parameter->getClass();
                 if (!$parameterType) {
-                    throw new ServiceParameterWithoutTypeHint($instance);
+                    throw new ServiceParameterWithoutTypeHint(get_class($instance) . ' : ' . $method);
                 }
                 $parameterType = $parameterType->name;
                 $parameters []= $this->getByType($parameterType);

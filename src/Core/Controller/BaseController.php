@@ -53,8 +53,9 @@ class BaseController
         $this->rendered = true;
     }
 
-    protected function renderJSON($data)
+    protected function renderJSON($data = [])
     {
+    	$data['flashMessages'] = $this->flashMessages;
         $this->render(json_encode($data));
     }
 

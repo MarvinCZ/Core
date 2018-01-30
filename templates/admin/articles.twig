@@ -1,16 +1,10 @@
 {% extends "layout/app.twig" %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-auto">
-            <h1>Moje články</h1>
-        </div>
-        <div class="col-md-auto ml-md-auto">
-            <a href="/article-create" class="btn btn-primary"><i class="fa fa-plus"></i> Nový</a>
-        </div>
-    </div>
+    <h1>Seznam článků</h1>
     <table class="table">
         <tr>
+            <th>Uživatel</th>
             <th>Autoři</th>
             <th>Název</th>
             <th>Stav</th>
@@ -18,13 +12,12 @@
         </tr>
         {% for article in articles %}
             <tr>
+                <td>{{ article.user.name }}</td>
                 <td>{{ article.authors }}</td>
                 <td>{{ article.name }}</td>
                 <td>{{ article.published ? 'Publikováno' : article.rejected ? 'Odmítnuto' : "Čeká" }}</td>
                 <td>
                     <div class="btn-group">
-                        <a href="/article/{{ article.id }}" data-method="delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
-                        <a href="/article-update/{{ article.id }}" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></a>
                         <a href="/article/{{ article.id }}" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
                     </div>
                 </td>

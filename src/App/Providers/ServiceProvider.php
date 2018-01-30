@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Configuration\DatabaseConfiguration;
 use App\Repository\ArticleRepository;
+use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
 use Core\Database\IDatabaseConfiguration;
 use Core\DI\IServiceProvider;
@@ -18,8 +19,10 @@ class ServiceProvider implements IServiceProvider
 	{
 		return [
 			IUserRepository::class => UserRepository::class,
+			UserRepository::class => UserRepository::class,
 			IDatabaseConfiguration::class => DatabaseConfiguration::class,
 			ArticleRepository::class => ArticleRepository::class,
+			ReviewRepository::class => ReviewRepository::class,
 		];
 	}
 }

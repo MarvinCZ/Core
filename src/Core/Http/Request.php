@@ -27,7 +27,13 @@ class Request
         return RestMethods::POST;
     }
 
-    public function getParameter($key, $throwException = FALSE): ?string
+	/**
+	 * @param $key
+	 * @param bool $throwException
+	 * @return string|array|null
+	 * @throws UndefinedParameter
+	 */
+    public function getParameter($key, $throwException = FALSE)
     {
         if (isset($_GET[$key]) && $this->getMethod() == RestMethods::GET) {
             return $_GET[$key];

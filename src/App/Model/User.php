@@ -30,6 +30,9 @@ class User implements IUser
 	/** @var int */
 	private $rights;
 
+	/** @var string */
+	private $password;
+
 	/**
 	 * User constructor.
 	 * @param $id
@@ -41,7 +44,7 @@ class User implements IUser
 	 * @internal param $name
 	 * @internal param $rights
 	 */
-	public function __construct($id, $email, $username, $firstname, $surname, $rights)
+	public function __construct($id, $email, $username, $firstname, $surname, $rights, $password)
 	{
 		$this->id = $id;
 		$this->email = $email;
@@ -49,6 +52,7 @@ class User implements IUser
 		$this->firstname = $firstname;
 		$this->surname = $surname;
 		$this->rights = $rights;
+		$this->password = $password;
 	}
 
 	public function getName(): string
@@ -64,6 +68,46 @@ class User implements IUser
 	public function getId(): int
 	{
 		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEmail(): string
+	{
+		return $this->email;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUsername(): string
+	{
+		return $this->username;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFirstname(): string
+	{
+		return $this->firstname;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSurname(): string
+	{
+		return $this->surname;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPassword(): string
+	{
+		return $this->password;
 	}
 
 	public function hasRole(int $role): bool
@@ -84,6 +128,16 @@ class User implements IUser
 	public function isAdmin(): bool
 	{
 		return $this->hasRole(self::ROLE_ADMIN);
+	}
+
+	public function addRole($role)
+	{
+		$this->rights = $this->rights | $role;
+	}
+
+	public function removeRole($role)
+	{
+		$this->rights = ($this->rights | $role) - $role;
 	}
 
 }

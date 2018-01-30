@@ -20,6 +20,10 @@ class Article
 	private $userId;
 	/** @var bool */
 	private $published;
+	/** @var bool */
+	private $rejected;
+	/** @var User */
+	private $user;
 
 	function __construct($id)
 	{
@@ -37,7 +41,7 @@ class Article
 	/**
 	 * @return string
 	 */
-	public function getName(): string
+	public function getName(): ?string
 	{
 		return $this->name;
 	}
@@ -45,7 +49,7 @@ class Article
 	/**
 	 * @return string
 	 */
-	public function getAuthors(): string
+	public function getAuthors(): ?string
 	{
 		return $this->authors;
 	}
@@ -53,7 +57,7 @@ class Article
 	/**
 	 * @return string
 	 */
-	public function getAbstract(): string
+	public function getAbstract(): ?string
 	{
 		return $this->abstract;
 	}
@@ -61,7 +65,7 @@ class Article
 	/**
 	 * @return string
 	 */
-	public function getFilePath(): string
+	public function getFilePath(): ?string
 	{
 		return $this->file;
 	}
@@ -72,6 +76,22 @@ class Article
 	public function getUserId(): ?int
 	{
 		return $this->userId;
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getUser(): User
+	{
+		return $this->user;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isRejected(): bool
+	{
+		return $this->rejected;
 	}
 
 	/**
@@ -127,7 +147,29 @@ class Article
 	 */
 	public function setPublished(bool $published)
 	{
+		if ($published) {
+			$this->rejected = FALSE;
+		}
 		$this->published = $published;
+	}
+
+	/**
+	 * @param bool $rejected
+	 */
+	public function setRejected(bool $rejected)
+	{
+		if ($rejected) {
+			$this->published = FALSE;
+		}
+		$this->rejected = $rejected;
+	}
+
+	/**
+	 * @param User $user
+	 */
+	public function setUser(User $user)
+	{
+		$this->user = $user;
 	}
 
 }

@@ -1,0 +1,100 @@
+{% extends "layout/app.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-auto">
+            <h1>Hodnocení článku - {{ review.article.name }}</h1>
+        </div>
+        <div class="col-md-auto ml-md-auto">
+            <a href="/article/{{ review.article.id }}" class="btn btn-primary"><i class="fa fa-eye"></i> Zobrazit článek</a>
+        </div>
+    </div>
+    <div class="row">
+        <form method="post" class="form-horizontal col-md-8 offset-md-2" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{ review.id }}">
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="language">Jazyk</label>
+                <div class="col-md-8">
+                    <select name="language" id="language" class="custom-select">
+                        <option value="1" {{ review.language == 1 ? 'selected' : '' }}>1</option>
+                        <option value="2" {{ review.language == 2 ? 'selected' : '' }}>2</option>
+                        <option value="3" {{ review.language == 3 ? 'selected' : '' }}>3</option>
+                        <option value="4" {{ review.language == 4 ? 'selected' : '' }}>4</option>
+                        <option value="5" {{ review.language == 5 ? 'selected' : '' }}>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="techquality">Technická kvalita</label>
+                <div class="col-md-8">
+                    <select name="techquality" id="techquality" class="custom-select">
+                        <option value="1" {{ review.technicalQuality == 1 ? 'selected' : '' }}>1</option>
+                        <option value="2" {{ review.technicalQuality == 2 ? 'selected' : '' }}>2</option>
+                        <option value="3" {{ review.technicalQuality == 3 ? 'selected' : '' }}>3</option>
+                        <option value="4" {{ review.technicalQuality == 4 ? 'selected' : '' }}>4</option>
+                        <option value="5" {{ review.technicalQuality == 5 ? 'selected' : '' }}>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="utility">Utility</label>
+                <div class="col-md-8">
+                    <select name="utility" id="utility" class="custom-select">
+                        <option value="1" {{ review.utility == 1 ? 'selected' : '' }}>1</option>
+                        <option value="2" {{ review.utility == 2 ? 'selected' : '' }}>2</option>
+                        <option value="3" {{ review.utility == 3 ? 'selected' : '' }}>3</option>
+                        <option value="4" {{ review.utility == 4 ? 'selected' : '' }}>4</option>
+                        <option value="5" {{ review.utility == 5 ? 'selected' : '' }}>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="audience">Šíře publika</label>
+                <div class="col-md-8">
+                    <select name="audience" id="audience" class="custom-select">
+                        <option value="1" {{ review.audienceDiversity == 1 ? 'selected' : '' }}>1</option>
+                        <option value="2" {{ review.audienceDiversity == 2 ? 'selected' : '' }}>2</option>
+                        <option value="3" {{ review.audienceDiversity == 3 ? 'selected' : '' }}>3</option>
+                        <option value="4" {{ review.audienceDiversity == 4 ? 'selected' : '' }}>4</option>
+                        <option value="5" {{ review.audienceDiversity == 5 ? 'selected' : '' }}>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="originality">Originalita</label>
+                <div class="col-md-8">
+                    <select name="originality" id="originality" class="custom-select">
+                        <option value="1" {{ review.originality == 1 ? 'selected' : '' }}>1</option>
+                        <option value="2" {{ review.originality == 2 ? 'selected' : '' }}>2</option>
+                        <option value="3" {{ review.originality == 3 ? 'selected' : '' }}>3</option>
+                        <option value="4" {{ review.originality == 4 ? 'selected' : '' }}>4</option>
+                        <option value="5" {{ review.originality == 5 ? 'selected' : '' }}>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="suggestion">Doporučení</label>
+                <div class="col-md-8">
+                    <select name="suggestion" id="suggestion" class="custom-select">
+                        <option value="1" {{ review.suggestion == 1 ? 'selected' : '' }}>Velmi doporučuji</option>
+                        <option value="2" {{ review.suggestion == 2 ? 'selected' : '' }}>Doporučuji</option>
+                        <option value="3" {{ review.suggestion == 3 ? 'selected' : '' }}>Nevím</option>
+                        <option value="4" {{ review.suggestion == 4 ? 'selected' : '' }}>Nedoporučuji</option>
+                        <option value="5" {{ review.suggestion == 5 ? 'selected' : '' }}>Velmi nedoporučuji</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="text" class="col-md-4 col-form-label">Hodnocení</label>
+                <div class="col-md-8">
+                    <textarea name="text" id="text" cols="30" rows="10" class="form-control">{{ review.text }}</textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="ml-auto col-md-8">
+                    <input type="submit" class="form-control btn btn-primary" name="submit" value="Uložit"/>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

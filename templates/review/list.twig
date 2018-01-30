@@ -1,0 +1,30 @@
+{% extends "layout/app.twig" %}
+
+{% block content %}
+    <h1>Hodnocení</h1>
+    <table class="table">
+        <tr>
+            <th>Autoři</th>
+            <th>Název</th>
+            <th>Hodnocení</th>
+            <th>Stav</th>
+            <th>Akce</th>
+        </tr>
+        {% for review in reviews %}
+            <tr>
+                <td>{{ review.article.authors }}</td>
+                <td>{{ review.article.name }}</td>
+                <td>{{ review.rating }}</td>
+                <td>{{ review.done ? 'Hotovo' : 'Čeká na vyřízení' }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="/review/{{ review.id }}" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                        {% if not review.article.published %}
+                            <a href="/review/edit/{{ review.id }}" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
