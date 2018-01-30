@@ -30,15 +30,18 @@ class LoginController extends BaseController
 		$username = $request->getParameter('username');
 		$password = $request->getParameter('password');
 
-		$userId = $this->userRepository->findByUsernameAndPassword($username, $password);
+		$user = $this->userRepository->findByUsernameAndPassword($username, $password);
 
-		if (!$userId) {
+		if (!$user) {
 			$this->addFlashMessage('danger', 'Uživatel neexistuje nebo zadané heslo není správné');
+			$this->redirect('/login');
+		} elseif ($user->isBanned()) {
+			$this->addFlashMessage('danger', 'Uživatel je zablokován');
 			$this->redirect('/login');
 		}
 
 		$this->addFlashMessage('success', 'Úspěšně přihlášeno');
-		$this->session->set('user_id', $userId);
+		$this->session->set('user_id', $user->getId());
 		$this->redirect('');
 	}
 

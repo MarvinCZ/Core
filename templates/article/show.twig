@@ -1,5 +1,7 @@
 {% extends "layout/app.twig" %}
 
+{% block title %}{{ article.name }}{% endblock %}
+
 {% block content %}
     {% if not article.published and user.admin %}
         <div class="modal fade" id="review-modal" tabindex="-1" role="dialog">
@@ -70,7 +72,7 @@
         <p><b>Stav: </b>{{ article.published ? 'Publikováno' : article.rejected ? 'Odmítnuto' : "Čeká" }}</p>
     {% endif %}
     <h2>Abstrakt</h2>
-    <div class="article-abstract">
+    <div class="jumbotron">
         {{ article.abstract|raw }}
     </div>
     <div class="btn-group">

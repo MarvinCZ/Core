@@ -1,5 +1,7 @@
 {% extends "layout/app.twig" %}
 
+{% block title %}Uživatelé{% endblock %}
+
 {% block content %}
     <h1>Uživatelé</h1>
     <table class="table">
@@ -7,6 +9,7 @@
             <th>Jméno</th>
             <th>Login</th>
             <th>Email</th>
+            <th>Stav</th>
             <th>Role</th>
             <th>Akce</th>
         </tr>
@@ -15,6 +18,7 @@
                 <td>{{ u.name }}</td>
                 <td>{{ u.username }}</td>
                 <td>{{ u.email }}</td>
+                <td>{{ u.banned ? 'Zablokován' : 'Aktivní' }}</td>
                 <td>
                     <div class="btn-group">
                         <a href="/admin/user/{{ u.id }}/{{ u.author ? 'remove' : 'add' }}/author" class="btn btn-sm btn-{{ u.author ? 'success' : 'danger' }}">Autor</a>
@@ -27,11 +31,16 @@
                     </div>
                 </td>
                 <td>
-                    <div class="btn-group">
-                        <a href="/article/{{ user.id }}" data-method="delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
-                        <a href="/article-update/{{ user.id }}" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></a>
-                        <a href="/article/{{ user.id }}" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
-                    </div>
+                    {% if u.id != user.id %}
+                        <div class="btn-group">
+                            <a href="/admin/user/{{ u.id }}" data-method="delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                            {% if u.banned %}
+                                <a href="/admin/user/{{ u.id }}/unblock" class="btn btn-sm btn-success"><i class="fa fa-check"></i></a>
+                            {% else %}
+                                <a href="/admin/user/{{ u.id }}/block" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i></a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

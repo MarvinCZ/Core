@@ -33,6 +33,9 @@ class User implements IUser
 	/** @var string */
 	private $password;
 
+	/** @var bool */
+	private $banned;
+
 	/**
 	 * User constructor.
 	 * @param $id
@@ -44,7 +47,7 @@ class User implements IUser
 	 * @internal param $name
 	 * @internal param $rights
 	 */
-	public function __construct($id, $email, $username, $firstname, $surname, $rights, $password)
+	public function __construct($id, $email, $username, $firstname, $surname, $rights, $password, $banned)
 	{
 		$this->id = $id;
 		$this->email = $email;
@@ -53,6 +56,7 @@ class User implements IUser
 		$this->surname = $surname;
 		$this->rights = $rights;
 		$this->password = $password;
+		$this->banned = (bool) $banned;
 	}
 
 	public function getName(): string
@@ -130,6 +134,11 @@ class User implements IUser
 		return $this->hasRole(self::ROLE_ADMIN);
 	}
 
+	public function isBanned(): bool
+	{
+		return $this->banned;
+	}
+
 	public function addRole($role)
 	{
 		$this->rights = $this->rights | $role;
@@ -138,6 +147,14 @@ class User implements IUser
 	public function removeRole($role)
 	{
 		$this->rights = ($this->rights | $role) - $role;
+	}
+
+	/**
+	 * @param bool $banned
+	 */
+	public function setBanned(bool $banned)
+	{
+		$this->banned = $banned;
 	}
 
 }

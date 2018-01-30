@@ -1,5 +1,13 @@
 {% extends "layout/app.twig" %}
 
+{% block title %}
+    {% if article.id %}
+        Upravit článek
+    {% else %}
+        Vytvořit článek
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <h1>
         {% if article.id %}

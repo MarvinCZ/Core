@@ -156,6 +156,7 @@ class ArticleController extends BaseController
 		$article->setName($name);
 		$article->setAuthors($authors);
 		$article->setAbstract($abstract);
+		$article->setUserId($this->getUser()->getId());
 
 		if (!empty($filePath)) {
 			$article->setFilePath($filePath);

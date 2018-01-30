@@ -83,7 +83,7 @@ class Review
 	/**
 	 * @return int
 	 */
-	public function getUserId(): int
+	public function getUserId(): ?int
 	{
 		return $this->userId;
 	}
@@ -179,7 +179,7 @@ class Review
 	/**
 	 * @return User
 	 */
-	public function getUser(): User
+	public function getUser(): ?User
 	{
 		return $this->user;
 	}
@@ -284,7 +284,7 @@ class Review
 		$this->article = $article;
 	}
 
-	public function setUser(User $user)
+	public function setUser(?User $user)
 	{
 		$this->user = $user;
 	}

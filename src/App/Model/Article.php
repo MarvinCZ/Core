@@ -19,9 +19,9 @@ class Article
 	/** @var int */
 	private $userId;
 	/** @var bool */
-	private $published;
+	private $published = FALSE;
 	/** @var bool */
-	private $rejected;
+	private $rejected = FALSE;
 	/** @var User */
 	private $user;
 
@@ -81,7 +81,7 @@ class Article
 	/**
 	 * @return User
 	 */
-	public function getUser(): User
+	public function getUser(): ?User
 	{
 		return $this->user;
 	}
@@ -137,7 +137,7 @@ class Article
 	/**
 	 * @param int $userId
 	 */
-	public function setUserId(int $userId)
+	public function setUserId(?int $userId)
 	{
 		$this->userId = $userId;
 	}
@@ -167,7 +167,7 @@ class Article
 	/**
 	 * @param User $user
 	 */
-	public function setUser(User $user)
+	public function setUser(?User $user)
 	{
 		$this->user = $user;
 	}

@@ -1,5 +1,24 @@
 {% extends "layout/app.twig" %}
 
+{% block title %}Seznam článků{% endblock %}
 {% block content %}
-    test
+    <h1>Seznam článků</h1>
+    <table class="table">
+        <tr>
+            <th>Autoři</th>
+            <th>Název článku</th>
+            <th></th>
+        </tr>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.authors }}</td>
+                <td>{{ article.name }}</td>
+                <td>
+                    <a href="/article/{{ article.id }}" class="btn btn-sm btn-secondary">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

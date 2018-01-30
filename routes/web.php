@@ -29,3 +29,6 @@ $router->addGet('/admin/reject-article/{id:int}', \App\Controller\AdminControlle
 $router->addGet('/admin/users', \App\Controller\AdminController::class, 'users');
 $router->addGet('/admin/user/{id:int}/{action:string}/{role:string}', \App\Controller\AdminController::class, 'role');
 $router->addGet('/admin/articles', \App\Controller\AdminController::class, 'articles');
+$router->addGet('/admin/user/{id:int}/block', \App\Controller\AdminController::class, 'block');
+$router->addGet('/admin/user/{id:int}/unblock', \App\Controller\AdminController::class, 'unblock');
+$router->addDelete('/admin/user/{id:int}', \App\Controller\AdminController::class, 'deleteUser');

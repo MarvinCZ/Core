@@ -41,10 +41,11 @@ class UserRepository implements IUserRepository
 		return $this->transformRows($rows);
 	}
 
-	public function findByUsernameAndPassword($username, $password): ?int
+	public function findByUsernameAndPassword($username, $password)
 	{
-		$userId = $this->pdoWrapper->getValue("SELECT id FROM user WHERE username = ? AND password = ?", [$username, sha1($password)]);
-		return $userId ? $userId : NULL;
+		$row = $this->pdoWrapper->getFirst("SELECT * FROM user WHERE username = ? AND password = ?", [$username, sha1($password)]);
+
+		return $row ? $this->transformRow($row) : NULL;
 	}
 
 	public function registerUser($username, $email, $firstname, $surname, $password, $rights)
@@ -74,6 +75,9 @@ class UserRepository implements IUserRepository
 	 */
 	public function eagerLoad($array)
 	{
+		if (!$array) {
+			return;
+		}
 		$idList = [];
 		foreach ($array as $entity) {
 			$idList []= $entity->getUserId();
@@ -103,7 +107,16 @@ class UserRepository implements IUserRepository
 
 	private function transformRow($row)
 	{
-		return new User($row['id'], $row['email'], $row['username'], $row['firstname'], $row['surname'], $row['rights'], $row['password']);
+		return new User(
+			$row['id'],
+			$row['email'],
+			$row['username'],
+			$row['firstname'],
+			$row['surname'],
+			$row['rights'],
+			$row['password'],
+			$row['banned']
+		);
 	}
 
 	/** @return User[] */
@@ -119,7 +132,7 @@ class UserRepository implements IUserRepository
 	private function insert(User $user)
 	{
 		$this->pdoWrapper->execute(
-			"INSERT INTO user (username, email, firstname, surname, password, rights) VALUES (?,?,?,?,?,?)",
+			"INSERT INTO user (username, email, firstname, surname, password, rights, banned) VALUES (?,?,?,?,?,?,?)",
 			[
 				$user->getUsername(),
 				$user->getEmail(),
@@ -127,6 +140,7 @@ class UserRepository implements IUserRepository
 				$user->getSurname(),
 				$user->getPassword(),
 				$user->getRights(),
+				$user->isBanned(),
 			]
 		);
 	}
@@ -134,7 +148,7 @@ class UserRepository implements IUserRepository
 	private function update(User $user)
 	{
 		$this->pdoWrapper->execute(
-			"UPDATE user SET username = ?, email = ?, firstname = ?, surname = ?, password = ?, rights = ? WHERE id = ?",
+			"UPDATE user SET username = ?, email = ?, firstname = ?, surname = ?, password = ?, rights = ?, banned = ? WHERE id = ?",
 			[
 				$user->getUsername(),
 				$user->getEmail(),
@@ -142,8 +156,14 @@ class UserRepository implements IUserRepository
 				$user->getSurname(),
 				$user->getPassword(),
 				$user->getRights(),
+				$user->isBanned(),
 				$user->getId(),
 			]
 		);
+	}
+
+	public function delete(User $user)
+	{
+		$this->pdoWrapper->execute("DELETE FROM user WHERE id = ?", [$user->getId()]);
 	}
 }

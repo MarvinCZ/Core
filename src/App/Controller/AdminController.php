@@ -96,6 +96,11 @@ class AdminController extends BaseController
 		/** @var User $user */
 		$user = $this->userRepository->getUser($id);
 
+		if (!$user) {
+			$this->addFlashMessage('danger', 'Uživatel neexistuje');
+			$this->redirect('/admin/users');
+		}
+
 		if ($action === "remove") {
 			$user->removeRole($roleValue);
 		} else {
@@ -105,6 +110,56 @@ class AdminController extends BaseController
 		$this->userRepository->save($user);
 
 		$this->addFlashMessage('success', 'Role úspěšně změněna');
+		$this->redirect('/admin/users');
+	}
+
+	public function block($id)
+	{
+		/** @var User $user */
+		$user = $this->userRepository->getUser($id);
+
+		if (!$user) {
+			$this->addFlashMessage('danger', 'Uživatel neexistuje');
+			$this->redirect('/admin/users');
+		}
+
+		$user->setBanned(TRUE);
+		$this->userRepository->save($user);
+
+		$this->addFlashMessage('success', 'Uživatel úspěšně zablokován');
+		$this->redirect('/admin/users');
+	}
+
+	public function unblock($id)
+	{
+		/** @var User $user */
+		$user = $this->userRepository->getUser($id);
+
+		if (!$user) {
+			$this->addFlashMessage('danger', 'Uživatel neexistuje');
+			$this->redirect('/admin/users');
+		}
+
+		$user->setBanned(FALSE);
+		$this->userRepository->save($user);
+
+		$this->addFlashMessage('success', 'Uživatel úspěšně odblokován');
+		$this->redirect('/admin/users');
+	}
+
+	public function deleteUser($id)
+	{
+		/** @var User $user */
+		$user = $this->userRepository->getUser($id);
+
+		if (!$user) {
+			$this->addFlashMessage('danger', 'Uživatel neexistuje');
+			$this->redirect('/admin/users');
+		}
+
+		$this->userRepository->delete($user);
+
+		$this->addFlashMessage('success', 'Uživatel úspěšně smazán');
 		$this->redirect('/admin/users');
 	}
 
