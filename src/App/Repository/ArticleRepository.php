@@ -109,6 +109,7 @@ class ArticleRepository
 	}
 
 	/**
+	 * Adds proper articles to reviews
 	 * @param Review[] $reviews
 	 */
 	public function eagerLoad($reviews)

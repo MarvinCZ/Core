@@ -30,6 +30,9 @@ class AdminController extends BaseController
 		$this->reviewRepository = $reviewRepository;
 	}
 
+	/**
+	 * Makes sure that user is logged and is admin
+	 */
 	public function init()
 	{
 		parent::init();
@@ -43,6 +46,10 @@ class AdminController extends BaseController
 		$this->renderView('admin/users.twig', ['users' => $users]);
 	}
 
+	/**
+	 * Makes article published if conditions are met
+	 * @param $id
+	 */
 	public function publishArticle($id)
 	{
 		$article = $this->articleRepository->get($id);
@@ -64,6 +71,10 @@ class AdminController extends BaseController
 		$this->redirect('/article/' . $id);
 	}
 
+	/**
+	 * Rejects article, it also makes article unpublished
+	 * @param $id
+	 */
 	public function rejectArticle($id)
 	{
 		$article = $this->articleRepository->get($id);
@@ -79,6 +90,12 @@ class AdminController extends BaseController
 		$this->redirect('/article/' . $id);
 	}
 
+	/**
+	 * Adds or removes role from given user
+	 * @param int $id user id
+	 * @param string $action remove or add
+	 * @param string $role rote to be added/removed
+	 */
 	public function role($id, $action, $role)
 	{
 		if ($action !== "remove" && $action !== "add") {
@@ -113,6 +130,10 @@ class AdminController extends BaseController
 		$this->redirect('/admin/users');
 	}
 
+	/**
+	 * Blocks given user
+	 * @param $id
+	 */
 	public function block($id)
 	{
 		/** @var User $user */
@@ -130,6 +151,10 @@ class AdminController extends BaseController
 		$this->redirect('/admin/users');
 	}
 
+	/**
+	 * Unblocks given user
+	 * @param $id
+	 */
 	public function unblock($id)
 	{
 		/** @var User $user */
@@ -147,6 +172,11 @@ class AdminController extends BaseController
 		$this->redirect('/admin/users');
 	}
 
+	/**
+	 * Deletes given user
+	 * His articles and reviews will still exists
+	 * @param $id
+	 */
 	public function deleteUser($id)
 	{
 		/** @var User $user */
@@ -163,6 +193,9 @@ class AdminController extends BaseController
 		$this->redirect('/admin/users');
 	}
 
+	/**
+	 * Lists all articles
+	 */
 	public function articles()
 	{
 		$articles = $this->articleRepository->getAll();

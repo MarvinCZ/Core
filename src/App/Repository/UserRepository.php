@@ -58,6 +58,11 @@ class UserRepository implements IUserRepository
 		return $result;
 	}
 
+	/**
+	 * Find all users with given role
+	 * @param int $role
+	 * @return array
+	 */
 	public function getUsersWithRole(int $role)
 	{
 		$users = $this->pdoWrapper->getAll("SELECT * FROM user WHERE rights & ? > 0", [$role]);
@@ -71,6 +76,7 @@ class UserRepository implements IUserRepository
 	}
 
 	/**
+	 * Adds proper users to reviews or articles
 	 * @param Review[]|Article[] $array
 	 */
 	public function eagerLoad($array)

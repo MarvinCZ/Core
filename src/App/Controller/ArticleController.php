@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\Article;
+use App\Model\Review;
 use App\Model\User;
 use App\Repository\ArticleRepository;
 use App\Repository\ReviewRepository;
@@ -31,6 +32,9 @@ class ArticleController extends BaseController
 		$this->reviewRepository = $reviewRepository;
 	}
 
+	/**
+	 * Shows articles for logged in user
+	 */
 	public function myArticles()
 	{
 		$this->requiredRole(User::ROLE_AUTHOR);
@@ -40,6 +44,10 @@ class ArticleController extends BaseController
 		$this->renderView('article/list.twig', ['articles' => $articles]);
 	}
 
+	/**
+	 * Deletes article
+	 * @param $id
+	 */
 	public function delete($id)
 	{
 		$this->requiredLogin();
@@ -81,6 +89,10 @@ class ArticleController extends BaseController
 		$this->renderView('article/form.twig', ['article' => $article]);
 	}
 
+	/**
+	 * Shows article
+	 * @param $id
+	 */
 	public function show($id)
 	{
 		$article = $this->articleRepository->get($id);
@@ -110,7 +122,10 @@ class ArticleController extends BaseController
 			$this->userRepository->eagerLoad($reviews);
 		}
 
-		$canPublish = !$article->isPublished() && $this->getUser()->hasRole(User::ROLE_ADMIN) && $this->reviewRepository->getReviewCountForArticle($id) >= 3;
+		$canPublish =
+			!$article->isPublished() &&
+			$this->getUser()->hasRole(User::ROLE_ADMIN) &&
+			$this->reviewRepository->getReviewCountForArticle($id) >= Review::MIN_REVIEW_COUNT;
 
 		$this->renderView('article/show.twig', [
 			'article' => $article,
@@ -128,6 +143,10 @@ class ArticleController extends BaseController
 		});
 	}
 
+	/**
+	 * Saves new or edited article
+	 * @param Request $request
+	 */
 	public function save(Request $request)
 	{
 		$id = $request->getParameter('id');

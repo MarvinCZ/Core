@@ -30,6 +30,9 @@ class ReviewController extends BaseController
 		$this->userRepository = $userRepository;
 	}
 
+	/**
+	 * Shows reviews which belongs to logged in user
+	 */
 	public function list()
 	{
 		$this->requiredRole(User::ROLE_REVIEWER);
@@ -40,6 +43,13 @@ class ReviewController extends BaseController
 		$this->renderView('review/list.twig', ['reviews' => $reviews]);
 	}
 
+	/**
+	 * Creates blank reviews and attaches them to given article and users
+	 * If user already has such review he will be ignored
+	 *
+	 * @param Request $request
+	 * @param $id
+	 */
 	public function addToArticle(Request $request, $id)
 	{
 		$article = $this->articleRepository->get($id);
@@ -77,6 +87,10 @@ class ReviewController extends BaseController
 		$this->renderJSON();
 	}
 
+	/**
+	 * Shows form for editing review, blocks user when article was published
+	 * @param $id
+	 */
 	public function reviewForm($id)
 	{
 		$this->requiredRole(User::ROLE_REVIEWER);
@@ -118,6 +132,11 @@ class ReviewController extends BaseController
 
 	}
 
+	/**
+	 * Saves review
+	 * @param Request $request
+	 * @param $id
+	 */
 	public function save(Request $request, $id)
 	{
 		$this->requiredRole(User::ROLE_REVIEWER);

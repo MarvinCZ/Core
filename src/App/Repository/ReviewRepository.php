@@ -40,6 +40,11 @@ class ReviewRepository
 		return $this->transformRows($reviews);
 	}
 
+	/**
+	 * Returns count of done reviews for article
+	 * @param $articleId
+	 * @return int
+	 */
 	public function getReviewCountForArticle($articleId)
 	{
 		return $this->pdoWrapper->getValue("SELECT COUNT(id) FROM review WHERE done AND article_id = ?", [$articleId]);
